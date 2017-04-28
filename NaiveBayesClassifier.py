@@ -30,7 +30,7 @@ def Gaussian_prob(x, V):
     return exp/(math.sqrt(2*math.pi*np.std(V)**2))
 
 
-def likelihood(x_row, X_):  #X_ is the output of separate_classes funcion and
+def likelihood(x_row, X_):  #X_ is the output of separate_classes()
     likelihood = np.ones(len(X_))
     for i in range(len(X_)):
         for j in range(X_[i].shape[1]):
@@ -38,13 +38,13 @@ def likelihood(x_row, X_):  #X_ is the output of separate_classes funcion and
     return likelihood
 
 def evidence(x, X):
-    #use Gaussian_prob to calculate P(x) for ev
+    #takes a number x and a array X and calculates P(x) 
     P_X = 1
     for i in range(X.shape[1]):
-        P_X *= Gaussian_prob(x[i], X[:, i]) #PROBLEM IS HERE!!!!
+        P_X *= Gaussian_prob(x[i], X[:, i])
     return P_X
 
-#Bayes theorem
+#Bayes theorem:
 #P(C/x) = (P(C) * P(X/C))/P(X) or Posterior = (Prior * Likelihood)/evidence
 class Gaussian_NB:
     
@@ -64,7 +64,6 @@ class Gaussian_NB:
         return self.proba
     
     def predict(self, X_test): #MAP solution
-        #proba = self.predict_proba(X_test)
         yp = np.zeros(X_test.shape[0])
         for i in range(X_test.shape[0]):
             yp[i] = np.argmax(self.proba[i])
