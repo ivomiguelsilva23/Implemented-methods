@@ -17,7 +17,7 @@ def separate_classes(X, y):
     return Xs
     
 
-def Prior(X_, y): #X_ is the output of separate_classes funcion
+def Prior(X_, y): #X_ is the output of separate_classes()
     priors = np.zeros(len(X_))
     for i in range(len(X_)):
         priors[i] = X_[i].shape[0]/len(y)
@@ -38,19 +38,20 @@ def likelihood(x_row, X_):  #X_ is the output of separate_classes()
     return likelihood
 
 def evidence(x, X):
-    #takes a number x and a array X and calculates P(x) 
     P_X = 1
     for i in range(X.shape[1]):
         P_X *= Gaussian_prob(x[i], X[:, i])
     return P_X
 
-#Bayes theorem:
+#Bayes theorem
 #P(C/x) = (P(C) * P(X/C))/P(X) or Posterior = (Prior * Likelihood)/evidence
 class Gaussian_NB:
     
     def fit(self, X, y):
         self.X_ = separate_classes(X, y)
         self.prior = Prior(self.X_, y)
+        self.X = X
+        self.aux = False
         return self
     
     def predict_proba(self, X_test):
@@ -58,15 +59,21 @@ class Gaussian_NB:
         for i in range(X_test.shape[0]):
             row = X_test[i][:]
             l = likelihood(row, self.X_)
-            P_X = evidence(row, X) 
+            P_X = evidence(row, self.X) 
             proba[i] = self.prior*l/P_X
-        self.proba = np.matrix(proba)
+        proba = np.matrix(proba)
+        self.aux = True
+        self.proba = proba
         return self.proba
     
     def predict(self, X_test): #MAP solution
+        if self.aux == False:
+            proba = [[] for k in range(X_test.shape[0])]
+            proba = self.predict_proba(X_test)
+        proba = self.proba
         yp = np.zeros(X_test.shape[0])
         for i in range(X_test.shape[0]):
-            yp[i] = np.argmax(self.proba[i])
+            yp[i] = np.argmax(proba[i])
         return yp
     
     def score(self, metric, y, yp):
