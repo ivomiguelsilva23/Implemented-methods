@@ -40,7 +40,7 @@ if test == True:
     print("Let's look at the target histogram\n")
     plt.hist(y, label = 'Diabetes', bins = 50)
     plt.show()
-    print("Now Let's apply log transformation to the target to make it more Gaussian")
+    print("Now Let's apply log transformation to the target to make it more Gaussian\n")
     y_log = np.log(y+50)
     plt.hist(y_log, label = 'Diabetes', bins = 50)
     #Split X and y in train and test
@@ -54,7 +54,7 @@ if test == True:
     yp1 = np.exp(yp)-50
     y_ts1 = np.exp(y_ts)-50
     print('MAPE(%) -', model.score('mape', y_ts1, yp1), '\n')
-    print('MAE -', model.score('mae', y_ts1, yp1), 'n')
+    print('MAE -', model.score('mae', y_ts1, yp1), '\n')
     print('It works fine, but error needs to get smaller\n')
     print("Let's try to use RBF Kernel\n")
     
